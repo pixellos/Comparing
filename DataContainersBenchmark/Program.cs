@@ -10,63 +10,13 @@ using System.Threading.Tasks;
 
 namespace DataContainersBenchmark
 {
-    public class Program
+    public partial class Program
     {
-        public abstract class Result
-        {
-            public string SomeData { get; }
-        }
-
-        public class SucceededResult : Result
-        {
-            public string Result { get; }
-            public SucceededResult(string result)
-            {
-                this.Result = result;
-            }
-        }
-
-        public class FailedResult : Result
-        {
-            public string FailureReason { get; }
-            public FailedResult(string message)
-            {
-                this.FailureReason = message;
-            }
-        }
-
-        public class FailedException : Exception
-        {
-            public string FailureReason { get; }
-            public FailedException(string failureReason)
-            {
-                this.FailureReason = failureReason;
-            }
-        }
-
-        public static Result SomeServiceCall()
-        {
-            return new SucceededResult("Result");
-        }
-
-        public static SucceededResult SomeNullServiceCall()
-        {
-            return new SucceededResult("Result");
-        }
-
-        public static SucceededResult SomeNullWithExceptionLogicDrivenServiceCallThrow()
-        {
-            throw new FailedException("Result");
-        }
-        public static SucceededResult SomeNullWithExceptionLogicDrivenServiceCall()
-        {
-            return new SucceededResult("Result");
-        }
-
+       
         [Benchmark]
         public static string IsHard()
         {
-            var result = Program.SomeServiceCall();
+            var result = Service.SomeServiceCall();
             if (result is SucceededResult)
             {
                 return ((SucceededResult)result).Result;
@@ -86,7 +36,7 @@ namespace DataContainersBenchmark
         {
             try
             {
-                var result = Program.SomeNullWithExceptionLogicDrivenServiceCall();
+                var result = Service.SomeNullWithExceptionLogicDrivenServiceCall();
                 if (result != null)
                 {
                     return result.SomeData;
@@ -104,7 +54,7 @@ namespace DataContainersBenchmark
         {
             try
             {
-                var result = Program.SomeNullWithExceptionLogicDrivenServiceCallThrow();
+                var result = Service.SomeNullWithExceptionLogicDrivenServiceCallThrow();
                 if (result != null)
                 {
                     return result.SomeData;
@@ -122,7 +72,7 @@ namespace DataContainersBenchmark
         [Benchmark]
         public static string NullCheck()
         {
-            var result = Program.SomeNullServiceCall();
+            var result = Service.SomeNullServiceCall();
             if (result != null)
             {
                 return result.SomeData;
@@ -133,7 +83,7 @@ namespace DataContainersBenchmark
         [Benchmark]
         public static string AsNull()
         {
-            var result = Program.SomeServiceCall();
+            var result = Service.SomeServiceCall();
             var succeededResult = result as SucceededResult;
             if (succeededResult != null)
             {
@@ -150,7 +100,7 @@ namespace DataContainersBenchmark
         [Benchmark]
         public static string IsAs()
         {
-            var result = Program.SomeServiceCall();
+            var result = Service.SomeServiceCall();
             if (result is SucceededResult)
             {
                 return (result as SucceededResult).Result;
@@ -168,7 +118,7 @@ namespace DataContainersBenchmark
         [Benchmark]
         public static string CSharp7IsSwitch()
         {
-            var result = Program.SomeServiceCall();
+            var result = Service.SomeServiceCall();
             switch (result)
             {
                 case FailedResult fr:
@@ -183,7 +133,7 @@ namespace DataContainersBenchmark
         [Benchmark]
         public static string CSharp7IsIfElse()
         {
-            var result = Program.SomeServiceCall();
+            var result = Service.SomeServiceCall();
             if (result is SucceededResult succeeded)
             {
                 return succeeded.Result;
