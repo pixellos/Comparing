@@ -67,8 +67,6 @@ namespace DataContainersBenchmark
             return "Something goes wrong.";
         }
 
-
-
         [Benchmark]
         public static string NullCheck()
         {
@@ -121,13 +119,33 @@ namespace DataContainersBenchmark
             var result = Service.SomeServiceCall();
             switch (result)
             {
-                case FailedResult fr:
-                    return fr.FailureReason;
                 case SucceededResult succeeded:
                     return succeeded.Result;
+                case FailedResult fr:
+                    return fr.FailureReason;
                 default:
                     return result.SomeData;
             }
+        }
+
+        [Benchmark]
+        public static string CSharp7IsSwitchSingleReturn()
+        {
+            var result = Service.SomeServiceCall();
+            String str;
+            switch (result)
+            {
+                case SucceededResult succeeded:
+                    str = succeeded.Result;
+                    break;
+                case FailedResult fr:
+                    str = fr.FailureReason;
+                    break;
+                default:
+                    str = result.SomeData;
+                    break;
+            }
+            return str;
         }
 
         [Benchmark]
@@ -146,6 +164,33 @@ namespace DataContainersBenchmark
             {
                 return result.SomeData;
             }
+        }
+
+        [Benchmark]
+        public static string CSharp7IsIfElseSignleReturn()
+        {
+            var result = Service.SomeServiceCall();
+            string str;
+            if (result is SucceededResult succeeded)
+            {
+                str = succeeded.Result;
+            }
+            else if (result is FailedResult fr)
+            {
+                str = fr.FailureReason;
+            }
+            else
+            {
+                str = result.SomeData;
+            }
+            return str;
+        }
+
+        [Benchmark]
+        public static string CSharp7IsIfElseSignleReturnInLine()
+        {
+            var result = Service.SomeServiceCall();
+            return result is SucceededResult succeded ? succeded.Result : (result is FailedResult fr ? fr.FailureReason : (result.SomeData));
         }
 
         static void Main(string[] args)
