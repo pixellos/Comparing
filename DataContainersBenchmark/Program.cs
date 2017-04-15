@@ -12,7 +12,7 @@ namespace DataContainersBenchmark
 {
     public partial class Program
     {
-       
+
         [Benchmark]
         public static string IsHard()
         {
@@ -148,18 +148,10 @@ namespace DataContainersBenchmark
             }
         }
 
-
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             BenchmarkSwitcher.FromTypes(new[] { typeof(Program) }).RunAll();
             Console.ReadKey();
-        }
-
-        private static void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        {
-            //Some logging, windows log, saving to external api with big delay
-            Thread.Sleep(1000);
         }
     }
 }

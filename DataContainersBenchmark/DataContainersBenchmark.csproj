@@ -145,8 +145,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FailedException.cs" />
+    <Compile Include="FailedResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Service.cs" />
+    <Compile Include="SucceededResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
